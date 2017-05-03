@@ -1,6 +1,6 @@
 package edu.uoc.elc.slack.lti.controller;
 
-import edu.uoc.elc.slack.lti.entity.Command;
+import edu.uoc.elc.slack.lti.entity.CommandEnum;
 import edu.uoc.elc.slack.lti.entity.CommandRequest;
 import edu.uoc.elc.slack.lti.entity.CommandResponse;
 import edu.uoc.elc.slack.lti.entity.ResponseType;
@@ -17,17 +17,7 @@ public class MainController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public CommandResponse ltiCommand(CommandRequest request) {
-		Command command = Command.fromRequest(request);
-		if (command != null) {
-			System.out.println(command.toString());
-			return CommandResponse.builder()
-							.response_type(ResponseType.EPHEMERAL.getText())
-							.text(command.name())
-							.build();
-		}
-
-		return CommandResponse.builder()
-						.response_type(ResponseType.INCHANNEL.getText())
-						.build();
+		CommandEnum command = CommandEnum.fromRequest(request);
+		return command.getCommand().execute(request);
 	}
 }
