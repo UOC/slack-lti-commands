@@ -1,0 +1,9 @@
+# Database configuration
+spring.datasource:
+    url: jdbc:mysql://localhost/slackLti
+    username: slackLti
+    password: slackLti
+    driverClassName: com.mysql.jdbc.Driver
+
+spring.jpa.hibernate:
+    ddl-auto: update
