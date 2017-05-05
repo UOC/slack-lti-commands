@@ -23,9 +23,9 @@
 
 package edu.uoc.elc.slack.lti.command;
 
-import edu.uoc.elc.slack.lti.entity.CommandRequest;
-import edu.uoc.elc.slack.lti.entity.CommandResponse;
-import edu.uoc.elc.slack.lti.entity.ResponseType;
+import edu.uoc.elc.slack.lti.type.CommandRequest;
+import edu.uoc.elc.slack.lti.type.CommandResponse;
+import edu.uoc.elc.slack.lti.type.ResponseType;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>

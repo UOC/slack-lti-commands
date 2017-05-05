@@ -23,10 +23,9 @@
 
 package edu.uoc.elc.slack.lti.controller;
 
-import edu.uoc.elc.slack.lti.entity.CommandEnum;
-import edu.uoc.elc.slack.lti.entity.CommandRequest;
-import edu.uoc.elc.slack.lti.entity.CommandResponse;
-import edu.uoc.elc.slack.lti.entity.ResponseType;
+import edu.uoc.elc.slack.lti.type.CommandEnum;
+import edu.uoc.elc.slack.lti.type.CommandRequest;
+import edu.uoc.elc.slack.lti.type.CommandResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;

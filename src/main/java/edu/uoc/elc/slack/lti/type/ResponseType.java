@@ -21,11 +21,8 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.entity;
+package edu.uoc.elc.slack.lti.type;
 
-import edu.uoc.elc.slack.lti.command.Command;
-import edu.uoc.elc.slack.lti.command.DefaultCommand;
-import edu.uoc.elc.slack.lti.command.HelpCommand;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -34,20 +31,9 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum CommandEnum {
-	HELP(new HelpCommand()),
+public enum ResponseType {
+	INCHANNEL("in_channel"),
+	EPHEMERAL("ephemeral");
 
-	DEFAULT(new DefaultCommand());
-
-
-	private Command command;
-
-	public static CommandEnum fromRequest(CommandRequest request) {
-		String[] commandText = request.getText().split(" ");
-		try {
-			return CommandEnum.valueOf(commandText[0].toUpperCase());
-		} catch (IllegalArgumentException commandInvalid) {
-			return DEFAULT;
-		}
-	}
+	private String text;
 }
