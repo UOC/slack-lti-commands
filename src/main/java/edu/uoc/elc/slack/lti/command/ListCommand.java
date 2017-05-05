@@ -49,7 +49,7 @@ public class ListCommand implements Command, ChannelConsumerRepositoryAware {
 		final String message = consumerList.isEmpty() ? "No consumers" : consumerList.stream().map(ChannelConsumer::getCaption).collect(Collectors.joining("\n"));
 
 		return CommandResponse.builder()
-						.response_type(ResponseType.INCHANNEL.getText())
+						.response_type(ResponseType.EPHEMERAL.getText())
 						.text(message)
 						.build();
 	}
