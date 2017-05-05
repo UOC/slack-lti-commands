@@ -21,25 +21,33 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.command;
+package edu.uoc.elc.slack.lti.entity;
 
-import edu.uoc.elc.slack.lti.type.CommandRequest;
-import edu.uoc.elc.slack.lti.type.CommandResponse;
-import edu.uoc.elc.slack.lti.type.ResponseType;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-public class HelpCommand implements Command {
-	private static String USAGE = "LTI commands. Usage:\n"
-					+ "/lti list. List all consumers\n"
-					+ "/lti help. Gets this message";
+@Entity
+@Getter
+@Setter
+@IdClass(ChannelConsumerId.class)
+public class ChannelConsumer {
+	@Id
+	private String channelId;
 
-	@Override
-	public CommandResponse execute(CommandRequest request) {
-		return CommandResponse.builder()
-						.response_type(ResponseType.EPHEMERAL.getText())
-						.text(USAGE)
-						.build();
+	@Id
+	private String alias;
+
+	private String description;
+	private String consumerKey;
+
+	public String getCaption() {
+		return alias + ": " + description;
 	}
 }

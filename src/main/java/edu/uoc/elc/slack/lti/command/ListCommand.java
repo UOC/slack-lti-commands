@@ -23,23 +23,34 @@
 
 package edu.uoc.elc.slack.lti.command;
 
+import edu.uoc.elc.slack.lti.entity.ChannelConsumer;
+import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
 import edu.uoc.elc.slack.lti.type.CommandRequest;
 import edu.uoc.elc.slack.lti.type.CommandResponse;
 import edu.uoc.elc.slack.lti.type.ResponseType;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-public class HelpCommand implements Command {
-	private static String USAGE = "LTI commands. Usage:\n"
-					+ "/lti list. List all consumers\n"
-					+ "/lti help. Gets this message";
+@Getter
+@Setter
+public class ListCommand implements Command, ChannelConsumerRepositoryAware {
+
+	private ChannelConsumerRepository channelConsumerRepository;
 
 	@Override
 	public CommandResponse execute(CommandRequest request) {
+		final List<ChannelConsumer> consumerList = channelConsumerRepository.findByChannelId(request.getChannel_id());
+		final String message = consumerList.isEmpty() ? "No consumers" : consumerList.stream().map(ChannelConsumer::getCaption).collect(Collectors.joining("\n"));
+
 		return CommandResponse.builder()
-						.response_type(ResponseType.EPHEMERAL.getText())
-						.text(USAGE)
+						.response_type(ResponseType.INCHANNEL.getText())
+						.text(message)
 						.build();
 	}
 }

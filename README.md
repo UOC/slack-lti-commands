@@ -10,6 +10,10 @@ Displays help
 
     /lti help
     
+## List
+List installed consumers
+    
+    /lti list
     
 # Install
  

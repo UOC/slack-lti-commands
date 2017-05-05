@@ -26,6 +26,7 @@ package edu.uoc.elc.slack.lti.type;
 import edu.uoc.elc.slack.lti.command.Command;
 import edu.uoc.elc.slack.lti.command.DefaultCommand;
 import edu.uoc.elc.slack.lti.command.HelpCommand;
+import edu.uoc.elc.slack.lti.command.ListCommand;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -36,6 +37,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum CommandEnum {
 	HELP(new HelpCommand()),
+	LIST(new ListCommand()),
 
 	DEFAULT(new DefaultCommand());
 

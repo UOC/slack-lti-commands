@@ -23,9 +23,13 @@
 
 package edu.uoc.elc.slack.lti.controller;
 
+import edu.uoc.elc.slack.lti.command.ChannelConsumerRepositoryAware;
+import edu.uoc.elc.slack.lti.command.Command;
+import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
 import edu.uoc.elc.slack.lti.type.CommandEnum;
 import edu.uoc.elc.slack.lti.type.CommandRequest;
 import edu.uoc.elc.slack.lti.type.CommandResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +41,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/lti")
 public class MainController {
 
+	@Autowired
+	private ChannelConsumerRepository channelConsumerRepository;
+
 	@RequestMapping(method = RequestMethod.POST)
 	public CommandResponse ltiCommand(CommandRequest request) {
-		CommandEnum command = CommandEnum.fromRequest(request);
-		return command.getCommand().execute(request);
+		CommandEnum commandEnum = CommandEnum.fromRequest(request);
+		final Command command = commandEnum.getCommand();
+
+		if (command instanceof ChannelConsumerRepositoryAware) {
+			((ChannelConsumerRepositoryAware) command).setChannelConsumerRepository(channelConsumerRepository);
+		}
+
+		return command.execute(request);
 	}
 }

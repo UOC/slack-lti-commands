@@ -23,23 +23,12 @@
 
 package edu.uoc.elc.slack.lti.command;
 
-import edu.uoc.elc.slack.lti.type.CommandRequest;
-import edu.uoc.elc.slack.lti.type.CommandResponse;
-import edu.uoc.elc.slack.lti.type.ResponseType;
+import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-public class HelpCommand implements Command {
-	private static String USAGE = "LTI commands. Usage:\n"
-					+ "/lti list. List all consumers\n"
-					+ "/lti help. Gets this message";
+public interface ChannelConsumerRepositoryAware {
+	void setChannelConsumerRepository(ChannelConsumerRepository channelConsumerRepository);
 
-	@Override
-	public CommandResponse execute(CommandRequest request) {
-		return CommandResponse.builder()
-						.response_type(ResponseType.EPHEMERAL.getText())
-						.text(USAGE)
-						.build();
-	}
 }

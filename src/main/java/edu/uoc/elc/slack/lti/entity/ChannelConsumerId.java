@@ -21,25 +21,21 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.command;
+package edu.uoc.elc.slack.lti.entity;
 
-import edu.uoc.elc.slack.lti.type.CommandRequest;
-import edu.uoc.elc.slack.lti.type.CommandResponse;
-import edu.uoc.elc.slack.lti.type.ResponseType;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-public class HelpCommand implements Command {
-	private static String USAGE = "LTI commands. Usage:\n"
-					+ "/lti list. List all consumers\n"
-					+ "/lti help. Gets this message";
+@Getter
+@Setter
+public class ChannelConsumerId implements Serializable {
+	public static final long serialVersionUID = 3814213517178162590L;
 
-	@Override
-	public CommandResponse execute(CommandRequest request) {
-		return CommandResponse.builder()
-						.response_type(ResponseType.EPHEMERAL.getText())
-						.text(USAGE)
-						.build();
-	}
+	String channelId;
+	String alias;
 }
