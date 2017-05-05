@@ -50,13 +50,6 @@ public class AddCommand implements Command, ChannelConsumerRepositoryAware, Data
 	private ChannelConsumerRepository channelConsumerRepository;
 	private DataConnector dataConnector;
 
-	private CommandResponse error(String message) {
-		return CommandResponse.builder()
-						.response_type(ResponseType.EPHEMERAL.getText())
-						.text(message)
-						.build();
-	}
-
 	@Override
 	public CommandResponse execute(CommandRequest request) {
 		AddCommandRequest addCommandRequest = new AddCommandRequest(request);
@@ -66,7 +59,6 @@ public class AddCommand implements Command, ChannelConsumerRepositoryAware, Data
 
 
 		ChannelConsumerFactory channelConsumerFactory = new ChannelConsumerFactory();
-
 		final ChannelConsumer channelConsumer = channelConsumerFactory.newChannelConsumer(addCommandRequest);
 
 		// check if alias already exists
@@ -95,5 +87,13 @@ public class AddCommand implements Command, ChannelConsumerRepositoryAware, Data
 
 	private String getToolConsumerKey(AddCommandRequest addCommandRequest) {
 		return addCommandRequest.getRequest().getChannel_id() + ":" + addCommandRequest.getConsumerKey();
+	}
+
+
+	private CommandResponse error(String message) {
+		return CommandResponse.builder()
+						.response_type(ResponseType.EPHEMERAL.getText())
+						.text(message)
+						.build();
 	}
 }
