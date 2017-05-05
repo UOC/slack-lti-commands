@@ -21,33 +21,27 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.type;
+package edu.uoc.elc.slack.lti.dto;
 
-import edu.uoc.elc.slack.lti.command.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import edu.uoc.elc.slack.lti.entity.ChannelConsumer;
+import edu.uoc.elc.slack.lti.type.AddCommandRequest;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-@Getter
-@AllArgsConstructor
-public enum CommandEnum {
-	HELP(new HelpCommand()),
-	LIST(new ListCommand()),
-	ADD(new AddCommand()),
-
-	DEFAULT(new DefaultCommand());
-
-
-	private Command command;
-
-	public static CommandEnum fromRequest(CommandRequest request) {
-		String[] commandText = request.getText().split(" ");
-		try {
-			return CommandEnum.valueOf(commandText[0].toUpperCase());
-		} catch (IllegalArgumentException commandInvalid) {
-			return DEFAULT;
+public class ChannelConsumerFactory {
+	public ChannelConsumer newChannelConsumer(AddCommandRequest addCommandRequest) {
+		if (!addCommandRequest.isValid()) {
+			return null;
 		}
+
+		ChannelConsumer channelConsumer = new ChannelConsumer();
+		channelConsumer.setAlias(addCommandRequest.getAlias());
+		channelConsumer.setChannelId(addCommandRequest.getRequest().getChannel_id());
+		channelConsumer.setDescription(addCommandRequest.getDescription());
+		channelConsumer.setConsumerKey(addCommandRequest.getConsumerKey());
+		channelConsumer.setLaunchUrl(addCommandRequest.getLaunchUrl());
+
+		return channelConsumer;
 	}
 }

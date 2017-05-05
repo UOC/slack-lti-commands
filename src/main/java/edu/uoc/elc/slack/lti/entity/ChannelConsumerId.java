@@ -23,7 +23,9 @@
 
 package edu.uoc.elc.slack.lti.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
@@ -33,6 +35,8 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChannelConsumerId implements Serializable {
 	public static final long serialVersionUID = 3814213517178162590L;
 

@@ -46,6 +46,7 @@ public class ChannelConsumer {
 
 	private String description;
 	private String consumerKey;
+	private String launchUrl;
 
 	public String getCaption() {
 		return alias + ": " + description;

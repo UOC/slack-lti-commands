@@ -25,14 +25,19 @@ package edu.uoc.elc.slack.lti.controller;
 
 import edu.uoc.elc.slack.lti.command.ChannelConsumerRepositoryAware;
 import edu.uoc.elc.slack.lti.command.Command;
+import edu.uoc.elc.slack.lti.command.DataConnectorAware;
 import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
 import edu.uoc.elc.slack.lti.type.CommandEnum;
 import edu.uoc.elc.slack.lti.type.CommandRequest;
 import edu.uoc.elc.slack.lti.type.CommandResponse;
+import org.oscelot.lti.tp.DataConnector;
+import org.oscelot.lti.tp.dataconnector.JDBC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.sql.DataSource;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
@@ -44,13 +49,23 @@ public class MainController {
 	@Autowired
 	private ChannelConsumerRepository channelConsumerRepository;
 
+	@Autowired
+	private DataSource dataSource;
+
 	@RequestMapping(method = RequestMethod.POST)
-	public CommandResponse ltiCommand(CommandRequest request) {
+	public CommandResponse ltiCommand(CommandRequest request) throws Throwable{
 		CommandEnum commandEnum = CommandEnum.fromRequest(request);
 		final Command command = commandEnum.getCommand();
 
+		// inject beans
+
 		if (command instanceof ChannelConsumerRepositoryAware) {
 			((ChannelConsumerRepositoryAware) command).setChannelConsumerRepository(channelConsumerRepository);
+		}
+
+		if (command instanceof DataConnectorAware) {
+			DataConnector dataConnector = new JDBC("", dataSource.getConnection());
+			((DataConnectorAware) command).setDataConnector(dataConnector);
 		}
 
 		return command.execute(request);

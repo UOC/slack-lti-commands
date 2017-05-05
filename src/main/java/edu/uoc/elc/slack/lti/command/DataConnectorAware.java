@@ -21,33 +21,13 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.type;
+package edu.uoc.elc.slack.lti.command;
 
-import edu.uoc.elc.slack.lti.command.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import org.oscelot.lti.tp.DataConnector;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-@Getter
-@AllArgsConstructor
-public enum CommandEnum {
-	HELP(new HelpCommand()),
-	LIST(new ListCommand()),
-	ADD(new AddCommand()),
-
-	DEFAULT(new DefaultCommand());
-
-
-	private Command command;
-
-	public static CommandEnum fromRequest(CommandRequest request) {
-		String[] commandText = request.getText().split(" ");
-		try {
-			return CommandEnum.valueOf(commandText[0].toUpperCase());
-		} catch (IllegalArgumentException commandInvalid) {
-			return DEFAULT;
-		}
-	}
+public interface DataConnectorAware {
+	void setDataConnector(DataConnector dataConnector);
 }

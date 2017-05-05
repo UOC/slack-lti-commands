@@ -23,31 +23,40 @@
 
 package edu.uoc.elc.slack.lti.type;
 
-import edu.uoc.elc.slack.lti.command.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
 @Getter
-@AllArgsConstructor
-public enum CommandEnum {
-	HELP(new HelpCommand()),
-	LIST(new ListCommand()),
-	ADD(new AddCommand()),
+public class AddCommandRequest {
+	private final static int REQUIRED_FIELDS = 5;
+	private final static int ALIAS_IDX = 1;
+	private final static int KEY_IDX = 2;
+	private final static int SECRET_IDX = 3;
+	private final static int URL_IDX = 4;
 
-	DEFAULT(new DefaultCommand());
+	private String alias;
+	private String consumerKey;
+	private String consumerSecret;
+	private String launchUrl;
+	private String description;
+	private boolean valid;
+	private CommandRequest request;
 
-
-	private Command command;
-
-	public static CommandEnum fromRequest(CommandRequest request) {
-		String[] commandText = request.getText().split(" ");
-		try {
-			return CommandEnum.valueOf(commandText[0].toUpperCase());
-		} catch (IllegalArgumentException commandInvalid) {
-			return DEFAULT;
+	public AddCommandRequest(CommandRequest request) {
+		this.request = request;
+		String[] text = request.getText().split("\\s+");
+		this.valid = text.length >= REQUIRED_FIELDS;
+		if (valid) {
+			this.alias = text[ALIAS_IDX];
+			this.consumerKey = text[KEY_IDX];
+			this.consumerSecret = text[SECRET_IDX];
+			this.launchUrl = text[URL_IDX];
+			this.description = Arrays.asList(text).subList(REQUIRED_FIELDS, text.length).stream().collect(Collectors.joining(" "));
 		}
 	}
 }
