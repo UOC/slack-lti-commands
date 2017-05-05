@@ -42,6 +42,7 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 	private final static String ERROR_MSG = "Sorry, that didn't work. Rember the usage:\n"
 					+ "/lti launch alias";
 	private final static String DOESNT_EXISTS_ERROR_MSG = "Sorry, consumer with alias `%s` does not exist. Try another one.";
+	private final static String SUCCESS_MSG = "<@%s|%s> launched lti consumer `%s`.";
 
 	private ChannelConsumerRepository channelConsumerRepository;
 	private DataConnector dataConnector;
@@ -70,6 +71,7 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 
 		return CommandResponse.builder()
 						.response_type(ResponseType.INCHANNEL.getText())
+						.text(String.format(SUCCESS_MSG, launchCommandRequest.getRequest().getUser_id(), launchCommandRequest.getRequest().getUser_name(), channelConsumer.getAlias()))
 						.attachments(Arrays.asList(attachment))
 						.build();
 	}
