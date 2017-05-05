@@ -14,6 +14,18 @@ Displays help
 List installed consumers
     
     /lti list
+
+## Add
+Add a new consumer
+
+    /lti add alias key secret launch_url description
+    
+## Launch
+
+Launches a consumer
+
+    /lti launch alias
+    
     
 # Install
  

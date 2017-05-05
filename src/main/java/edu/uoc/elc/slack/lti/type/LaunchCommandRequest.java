@@ -23,24 +23,29 @@
 
 package edu.uoc.elc.slack.lti.type;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Builder;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CommandResponse {
-	private String text;
-	private String response_type;
-	private List<Attachment> attachments;
+public class LaunchCommandRequest {
+	private final static int REQUIRED_FIELDS = 2;
+	private final static int ALIAS_IDX = 1;
+
+	private String alias;
+	private boolean valid;
+	private CommandRequest request;
+
+	public LaunchCommandRequest(CommandRequest request) {
+		this.request = request;
+		String[] text = request.getText().split("\\s+");
+		this.valid = text.length == REQUIRED_FIELDS;
+		if (valid) {
+			this.alias = text[ALIAS_IDX];
+		}
+	}
 }

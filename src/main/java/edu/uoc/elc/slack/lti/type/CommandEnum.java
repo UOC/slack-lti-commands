@@ -36,6 +36,7 @@ public enum CommandEnum {
 	HELP(new HelpCommand()),
 	LIST(new ListCommand()),
 	ADD(new AddCommand()),
+	LAUNCH(new LaunchCommand()),
 
 	DEFAULT(new DefaultCommand());
 

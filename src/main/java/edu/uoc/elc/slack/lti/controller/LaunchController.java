@@ -21,26 +21,30 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.type;
+package edu.uoc.elc.slack.lti.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Builder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CommandResponse {
-	private String text;
-	private String response_type;
-	private List<Attachment> attachments;
+@Controller
+public class LaunchController {
+
+	@RequestMapping("/launch")
+	public String launch(Model model, HttpServletRequest request) {
+		System.out.println("launching...");
+		final Enumeration<String> parameterNames = request.getParameterNames();
+		while (parameterNames.hasMoreElements()) {
+			String paramName = parameterNames.nextElement();
+			System.out.println("Parameter: " + paramName + ". Value: " + request.getParameter(paramName));
+		}
+		return "launch";
+	}
+
 }

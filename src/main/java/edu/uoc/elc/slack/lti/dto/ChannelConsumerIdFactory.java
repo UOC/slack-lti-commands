@@ -21,26 +21,21 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.type;
+package edu.uoc.elc.slack.lti.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.Builder;
-
-import java.util.List;
+import edu.uoc.elc.slack.lti.entity.ChannelConsumerId;
+import edu.uoc.elc.slack.lti.type.LaunchCommandRequest;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CommandResponse {
-	private String text;
-	private String response_type;
-	private List<Attachment> attachments;
+public class ChannelConsumerIdFactory {
+	public ChannelConsumerId newChannelConsumerId(LaunchCommandRequest request) {
+		ChannelConsumerId channelConsumerId = new ChannelConsumerId();
+		
+		channelConsumerId.setAlias(request.getAlias());
+		channelConsumerId.setChannelId(request.getRequest().getChannel_id());
+
+		return channelConsumerId;
+	}
 }

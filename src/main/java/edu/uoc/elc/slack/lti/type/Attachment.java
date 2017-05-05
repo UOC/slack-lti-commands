@@ -29,8 +29,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Builder;
 
-import java.util.List;
-
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
@@ -39,8 +37,11 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CommandResponse {
+public class Attachment {
+	private String fallback;
+	private String pretext;
+	private String title;
+	private String title_link;
 	private String text;
-	private String response_type;
-	private List<Attachment> attachments;
+	private String color;
 }

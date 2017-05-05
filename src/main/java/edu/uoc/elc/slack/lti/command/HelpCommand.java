@@ -34,6 +34,7 @@ public class HelpCommand implements Command {
 	private static String USAGE = "LTI commands. Usage:\n"
 					+ "/lti list. List all consumers\n"
 					+ "/lti add alias key secret launch_url description. Adds a consumer\n"
+					+ "/lti launch alias. Launches a consumer\n"
 					+ "/lti help. Gets this message";
 
 	@Override
