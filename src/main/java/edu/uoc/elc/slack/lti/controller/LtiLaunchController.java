@@ -23,9 +23,15 @@
 
 package edu.uoc.elc.slack.lti.controller;
 
+import allbegray.slack.SlackClientFactory;
+import allbegray.slack.type.Channel;
+import allbegray.slack.type.Group;
+import allbegray.slack.type.User;
+import allbegray.slack.webapi.SlackWebApiClient;
 import edu.uoc.elc.slack.lti.controller.exception.ChannelConsumerNotAvailableException;
 import edu.uoc.elc.slack.lti.controller.exception.ChannelConsumerNotEnabledException;
 import edu.uoc.elc.slack.lti.controller.exception.ChannelConsumerNotFoundException;
+import edu.uoc.elc.slack.lti.controller.exception.InvalidLaunchException;
 import edu.uoc.elc.slack.lti.dto.LtiConsumerPropertiesFactory;
 import edu.uoc.elc.slack.lti.entity.ChannelConsumer;
 import edu.uoc.elc.slack.lti.entity.ChannelConsumerId;
@@ -38,6 +44,9 @@ import org.oscelot.lti.tp.DataConnector;
 import org.oscelot.lti.tp.ToolConsumer;
 import org.oscelot.lti.tp.dataconnector.JDBC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,6 +58,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
@@ -62,6 +72,31 @@ public class LtiLaunchController {
 	@Autowired
 	private DataSource dataSource;
 
+	@Autowired
+	private OAuth2ClientContext oauth2Context;
+
+	private void checkCanLaunch(ToolConsumer tc, allbegray.slack.type.Authentication slackAuth, SlackWebApiClient slackWebApiClient, ChannelConsumer channelConsumer, String teamId, String channelId) {
+		// check tool consumer is available
+		if (!tc.isAvailable()) {
+			throw new ChannelConsumerNotAvailableException();
+		}
+		// check tool consumer is enabled
+		if (!tc.isEnabled()) {
+			throw new ChannelConsumerNotEnabledException();
+		}
+
+		// check auth is from the same team
+		if (slackAuth == null || !slackAuth.getTeam_id().equals(channelConsumer.getTeamId())) {
+			throw new InvalidLaunchException();
+		}
+		// check user has access to the channel
+		final List<Channel> channelList = slackWebApiClient.getChannelList();
+		Predicate<Channel> isChannelPredicate = e -> e.getId().equals(channelConsumer.getChannelId());
+		if (channelList.stream().noneMatch(isChannelPredicate)) {
+			throw new InvalidLaunchException();
+		}
+	}
+
 	@RequestMapping("/launch/{teamId}/{channelId}/{alias}")
 	public String launch(@PathVariable("teamId") String teamId, @PathVariable("channelId") String channelId, @PathVariable("alias") String alias, Model model) throws Throwable {
 		ChannelConsumerId channelConsumerId = new ChannelConsumerId(channelId, alias);
@@ -72,23 +107,20 @@ public class LtiLaunchController {
 
 		DataConnector dataConnector = new JDBC("", dataSource.getConnection());
 		ToolConsumer tc = new ToolConsumer(channelConsumer.getToolConsumerKey(), dataConnector, false);
-		if (!tc.isAvailable()) {
-			throw new ChannelConsumerNotAvailableException();
-		}
-		if (!tc.isEnabled()) {
-			throw new ChannelConsumerNotEnabledException();
-		}
 
-		// TODO: get from Slack
-		String userName = "test user";
-		String userId = "12345";
+		// get from Slack
+		final SlackWebApiClient slackWebApiClient = SlackClientFactory.createWebApiClient(oauth2Context.getAccessToken().getValue());
+		final allbegray.slack.type.Authentication slackAuth = slackWebApiClient.auth();
+
+		// check we can do the launch
+		checkCanLaunch(tc, slackAuth, slackWebApiClient, channelConsumer, teamId, channelId);
 
 		// prepare launch
 		LtiConsumerPropertiesFactory ltiConsumerPropertiesFactory = new LtiConsumerPropertiesFactory();
 
 		List<Map.Entry<String, String>> reqParams = new ArrayList<Map.Entry<String, String>>();
 		OAuthMessage oAuthMessage = new OAuthMessage("POST", channelConsumer.getLaunchUrl(),
-						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, userName, userId));
+						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, slackAuth));
 		OAuthConsumer oAuthConsumer = new OAuthConsumer("about:blank", channelConsumer.getConsumerKey(), tc.getSecret(), null);
 		OAuthAccessor oAuthAccessor = new OAuthAccessor(oAuthConsumer);
 		try {

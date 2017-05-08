@@ -78,3 +78,15 @@ Set database properties in `src/main/resources/application-{active_profile}.yml`
         username: slackLti
         password: slackLti
         driverClassName: com.mysql.jdbc.Driver
+
+## Slack Oauth
+
+Set client properties in `src/main/resources/application-{active_profile}.yml`:
+
+    security:
+      oauth2:
+        client:
+            clientId: <your client id>
+            clientSecret: <your client secret>
+            
+Visit https://api.slack.com/apps for registering an app and getting the client id and secret.

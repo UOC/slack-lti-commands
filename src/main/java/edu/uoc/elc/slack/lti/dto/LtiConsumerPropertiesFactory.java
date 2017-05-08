@@ -23,6 +23,7 @@
 
 package edu.uoc.elc.slack.lti.dto;
 
+import allbegray.slack.type.Authentication;
 import edu.uoc.elc.slack.lti.entity.ChannelConsumer;
 import edu.uoc.elc.slack.lti.form.ConsumerLaunch;
 import org.oscelot.lti.tp.ToolConsumer;
@@ -34,16 +35,16 @@ import java.util.*;
  */
 public class LtiConsumerPropertiesFactory {
 
-	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, ToolConsumer tc, String userName, String userId) {
+	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, ToolConsumer tc, Authentication slackAuth) {
 		HashSet<Map.Entry<String,String>> httpParams = new HashSet<Map.Entry<String,String>>();
 
 		Map<String, String> propertiesMap = new TreeMap<>();
 
-		propertiesMap.put("lis_person_name_full", userName);
-		propertiesMap.put("lis_person_name_family", userName);
-		propertiesMap.put("lis_person_name_given", userName);
-		propertiesMap.put("lis_person_sourceid", channelConsumer.getChannelId() + ":" + userId);
-		propertiesMap.put("user_id", userId);
+		propertiesMap.put("lis_person_name_full", slackAuth.getUser());
+		propertiesMap.put("lis_person_name_family", slackAuth.getUser());
+		propertiesMap.put("lis_person_name_given", slackAuth.getUser());
+		propertiesMap.put("lis_person_sourceid", channelConsumer.getChannelId() + ":" + slackAuth.getUser_id());
+		propertiesMap.put("user_id", slackAuth.getUser_id());
 		propertiesMap.put("roles", "Learner"); // TODO: check
 		propertiesMap.put("resource_link_id", channelConsumer.getChannelId() + ":" + channelConsumer.getAlias());
 		propertiesMap.put("resource_link_title", channelConsumer.getAlias());
