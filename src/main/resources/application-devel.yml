@@ -30,3 +30,19 @@ spring.datasource:
 
 spring.jpa.hibernate:
     ddl-auto: update
+
+security:
+  oauth2:
+    client:
+      clientId: "16982240390.178924862967"
+      clientSecret: "4d7aa1ce12e01959b99f5387bc56d299"
+      accessTokenUri: https://slack.com/api/oauth.access
+      userAuthorizationUri: https://slack.com/oauth/authorize
+      tokenName: token
+      clientAuthenticationScheme: form
+      authenticationScheme: query
+      scope: channels:read groups:read users:read
+    resource:
+      userInfoUri: https://slack.com/api/users.profile.get
+      tokenType: Bearer
+      preferTokenInfo: false

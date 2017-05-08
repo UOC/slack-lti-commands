@@ -26,10 +26,24 @@ package edu.uoc.elc.slack.lti;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @SpringBootApplication
 @EnableAutoConfiguration
-public class SlackLtiCommandApplication {
+@EnableOAuth2Sso
+public class SlackLtiCommandApplication extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+						.antMatcher("/**")
+						.authorizeRequests()
+							.antMatchers("/", "/login", "/lti").permitAll()
+						.anyRequest().authenticated()
+						.and().csrf().disable();
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(SlackLtiCommandApplication.class, args);
