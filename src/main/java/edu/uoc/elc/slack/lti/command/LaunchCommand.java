@@ -38,7 +38,7 @@ import java.util.List;
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
 @Setter
-public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, DataConnectorAware {
+public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, DataConnectorAware, ServerURLAware {
 	private final static String ERROR_MSG = "Sorry, that didn't work. Rember the usage:\n"
 					+ "/lti launch alias";
 	private final static String DOESNT_EXISTS_ERROR_MSG = "Sorry, consumer with alias `%s` does not exist. Try another one.";
@@ -46,6 +46,7 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 
 	private ChannelConsumerRepository channelConsumerRepository;
 	private DataConnector dataConnector;
+	private String serverUrl;
 
 	@Override
 	public CommandResponse execute(CommandRequest request) {
@@ -65,7 +66,7 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 		// attachment
 		Attachment attachment = Attachment.builder()
 						.title(channelConsumer.getDescription())
-						.title_link("https://510c0e1d.ngrok.io/launch")
+						.title_link(getLaunchLink(channelConsumerId))
 						.text("Click on link to launch")
 						.build();
 
@@ -74,6 +75,10 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 						.text(String.format(SUCCESS_MSG, launchCommandRequest.getRequest().getUser_id(), launchCommandRequest.getRequest().getUser_name(), channelConsumer.getAlias()))
 						.attachments(Arrays.asList(attachment))
 						.build();
+	}
+
+	private String getLaunchLink(ChannelConsumerId channelConsumerId) {
+		return serverUrl + "/launch/" + channelConsumerId.getChannelId() + "/" + channelConsumerId.getAlias();
 	}
 
 	private CommandResponse error(String message) {

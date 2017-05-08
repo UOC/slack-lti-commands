@@ -26,6 +26,7 @@ package edu.uoc.elc.slack.lti.controller;
 import edu.uoc.elc.slack.lti.command.ChannelConsumerRepositoryAware;
 import edu.uoc.elc.slack.lti.command.Command;
 import edu.uoc.elc.slack.lti.command.DataConnectorAware;
+import edu.uoc.elc.slack.lti.command.ServerURLAware;
 import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
 import edu.uoc.elc.slack.lti.type.CommandEnum;
 import edu.uoc.elc.slack.lti.type.CommandRequest;
@@ -37,7 +38,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
+import java.net.URL;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
@@ -53,12 +56,11 @@ public class MainController {
 	private DataSource dataSource;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public CommandResponse ltiCommand(CommandRequest request) throws Throwable{
+	public CommandResponse ltiCommand(CommandRequest request, HttpServletRequest httpServletRequest) throws Throwable{
 		CommandEnum commandEnum = CommandEnum.fromRequest(request);
 		final Command command = commandEnum.getCommand();
 
 		// inject beans
-
 		if (command instanceof ChannelConsumerRepositoryAware) {
 			((ChannelConsumerRepositoryAware) command).setChannelConsumerRepository(channelConsumerRepository);
 		}
@@ -68,6 +70,10 @@ public class MainController {
 			((DataConnectorAware) command).setDataConnector(dataConnector);
 		}
 
+		if (command instanceof ServerURLAware) {
+			URL url = new URL(httpServletRequest.getRequestURL().toString());
+			((ServerURLAware) command).setServerUrl(url.getProtocol() + "://" + url.getHost());
+		}
 		return command.execute(request);
 	}
 }
