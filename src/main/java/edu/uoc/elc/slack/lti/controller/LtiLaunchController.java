@@ -62,11 +62,11 @@ public class LtiLaunchController {
 	@Autowired
 	private DataSource dataSource;
 
-	@RequestMapping("/launch/{channelId}/{alias}")
-	public String launch(@PathVariable("channelId") String channelId, @PathVariable("alias") String alias, Model model) throws Throwable {
+	@RequestMapping("/launch/{teamId}/{channelId}/{alias}")
+	public String launch(@PathVariable("teamId") String teamId, @PathVariable("channelId") String channelId, @PathVariable("alias") String alias, Model model) throws Throwable {
 		ChannelConsumerId channelConsumerId = new ChannelConsumerId(channelId, alias);
 		final ChannelConsumer channelConsumer = channelConsumerRepository.findOne(channelConsumerId);
-		if (channelConsumer == null) {
+		if (channelConsumer == null || !teamId.equals(channelConsumer.getTeamId())) {
 			throw new ChannelConsumerNotFoundException();
 		}
 
@@ -82,16 +82,13 @@ public class LtiLaunchController {
 		// TODO: get from Slack
 		String userName = "test user";
 		String userId = "12345";
-		String channelName = "test channel";
-		String slackApp = "elearnlab.slack.com";
-		String slackName = "eLearn Lab";
 
 		// prepare launch
 		LtiConsumerPropertiesFactory ltiConsumerPropertiesFactory = new LtiConsumerPropertiesFactory();
 
 		List<Map.Entry<String, String>> reqParams = new ArrayList<Map.Entry<String, String>>();
 		OAuthMessage oAuthMessage = new OAuthMessage("POST", channelConsumer.getLaunchUrl(),
-						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, userName, userId, channelName, slackApp, slackName));
+						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, userName, userId));
 		OAuthConsumer oAuthConsumer = new OAuthConsumer("about:blank", channelConsumer.getConsumerKey(), tc.getSecret(), null);
 		OAuthAccessor oAuthAccessor = new OAuthAccessor(oAuthConsumer);
 		try {

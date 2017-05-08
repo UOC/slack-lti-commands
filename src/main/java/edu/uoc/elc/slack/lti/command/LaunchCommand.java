@@ -66,7 +66,7 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 		// attachment
 		Attachment attachment = Attachment.builder()
 						.title(channelConsumer.getDescription())
-						.title_link(getLaunchLink(channelConsumerId))
+						.title_link(getLaunchLink(channelConsumer))
 						.text("Click on link to launch")
 						.build();
 
@@ -77,8 +77,8 @@ public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, D
 						.build();
 	}
 
-	private String getLaunchLink(ChannelConsumerId channelConsumerId) {
-		return serverUrl + "/launch/" + channelConsumerId.getChannelId() + "/" + channelConsumerId.getAlias();
+	private String getLaunchLink(ChannelConsumer channelConsumer) {
+		return serverUrl + "/launch/" + channelConsumer.getTeamId() + "/" + channelConsumer.getChannelId() + "/" + channelConsumer.getAlias();
 	}
 
 	private CommandResponse error(String message) {

@@ -48,6 +48,9 @@ public class ChannelConsumer {
 	private String description;
 	private String consumerKey;
 	private String launchUrl;
+	private String teamId;
+	private String teamDomain;
+	private String channelName;
 
 	public String getCaption() {
 		return alias + ": " + description;

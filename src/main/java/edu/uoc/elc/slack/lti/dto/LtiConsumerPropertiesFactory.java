@@ -34,7 +34,7 @@ import java.util.*;
  */
 public class LtiConsumerPropertiesFactory {
 
-	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, ToolConsumer tc, String userName, String userId, String channelName, String slackApp, String slackName) {
+	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, ToolConsumer tc, String userName, String userId) {
 		HashSet<Map.Entry<String,String>> httpParams = new HashSet<Map.Entry<String,String>>();
 
 		Map<String, String> propertiesMap = new TreeMap<>();
@@ -49,12 +49,12 @@ public class LtiConsumerPropertiesFactory {
 		propertiesMap.put("resource_link_title", channelConsumer.getAlias());
 		propertiesMap.put("resource_link_description", channelConsumer.getDescription());
 		propertiesMap.put("context_id", channelConsumer.getChannelId());
-		propertiesMap.put("context_label", channelName);
-		propertiesMap.put("context_title", channelName);
+		propertiesMap.put("context_label", channelConsumer.getChannelName());
+		propertiesMap.put("context_title", channelConsumer.getChannelName());
 		propertiesMap.put("tool_consumer_info_product_family_code", "slack-lti");
 		propertiesMap.put("tool_consumer_info_version", "0.0.1");
-		propertiesMap.put("tool_consumer_instance_guid", slackApp);
-		propertiesMap.put("tool_consumer_instance_description", slackName);
+		propertiesMap.put("tool_consumer_instance_guid", channelConsumer.getTeamId() + ".slack.com");
+		propertiesMap.put("tool_consumer_instance_description", channelConsumer.getTeamDomain());
 
 		propertiesMap.put("lti_version", "LTI-2p0");
 		propertiesMap.put("lti_message_type", "basic-lti-launch-request");

@@ -41,6 +41,8 @@ public class ChannelConsumerFactory {
 		channelConsumer.setDescription(addCommandRequest.getDescription());
 		channelConsumer.setConsumerKey(addCommandRequest.getConsumerKey());
 		channelConsumer.setLaunchUrl(addCommandRequest.getLaunchUrl());
+		channelConsumer.setTeamId(addCommandRequest.getRequest().getTeam_id());
+		channelConsumer.setTeamDomain(addCommandRequest.getRequest().getTeam_domain());
 
 		return channelConsumer;
 	}
