@@ -34,7 +34,6 @@ import edu.uoc.elc.slack.lti.type.ResponseType;
 import lombok.Setter;
 import org.oscelot.lti.tp.DataConnector;
 import org.oscelot.lti.tp.ToolConsumer;
-import org.oscelot.lti.tp.dataconnector.JDBC;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>

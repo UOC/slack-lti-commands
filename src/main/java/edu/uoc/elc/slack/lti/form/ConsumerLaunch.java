@@ -21,30 +21,40 @@
  *
  */
 
-package edu.uoc.elc.slack.lti.controller;
+package edu.uoc.elc.slack.lti.form;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Enumeration;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Builder;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
-@Controller
-public class LaunchController {
+@Getter
+@Setter
+@Builder
+public class ConsumerLaunch {
 
-	@RequestMapping("/launch")
-	public String launch(Model model, HttpServletRequest request) {
-		System.out.println("launching...");
-		final Enumeration<String> parameterNames = request.getParameterNames();
-		while (parameterNames.hasMoreElements()) {
-			String paramName = parameterNames.nextElement();
-			System.out.println("Parameter: " + paramName + ". Value: " + request.getParameter(paramName));
-		}
-		return "launch";
-	}
+	private String action;
+	private String oauth_signature;
+	private String oauth_nonce;
+	private String lti_version;
+	private String oauth_timestamp;
 
+	private String lis_person_name_full;
+	private String lis_person_name_family;
+	private String lis_person_name_given;
+	private String lis_person_sourceid;
+	private String user_id;
+	private String roles;
+	private String resource_link_id;
+	private String resource_link_title;
+	private String resource_link_description;
+	private String context_id;
+	private String context_label;
+	private String context_title;
+	private String tool_consumer_info_product_family_code;
+	private String tool_consumer_info_version;
+	private String tool_consumer_instance_guid;
+	private String tool_consumer_instance_description;
 }

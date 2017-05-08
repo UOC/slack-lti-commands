@@ -28,6 +28,13 @@
     <title>Slack LTI</title>
 </head>
 <body>
- Launching...
+<form id="launchForm" action="#" data-th-action="${action}" data-th-method="post">
+    <input type="hidden" data-th-name="${param.key}" data-th-value="${param.value}" data-th-each="param : ${launch}" />
+    <input type="submit" />
+</form>
+
+<script language="javascript">
+//  document.getElementById("launchForm").submit();
+</script>
 </body>
 </html>
