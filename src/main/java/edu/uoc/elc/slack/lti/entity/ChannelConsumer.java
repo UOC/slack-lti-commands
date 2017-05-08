@@ -23,6 +23,7 @@
 
 package edu.uoc.elc.slack.lti.entity;
 
+import edu.uoc.elc.slack.lti.type.AddCommandRequest;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -51,4 +52,9 @@ public class ChannelConsumer {
 	public String getCaption() {
 		return alias + ": " + description;
 	}
+
+	public String getToolConsumerKey() {
+		return getChannelId() + ":" + getConsumerKey();
+	}
+
 }
