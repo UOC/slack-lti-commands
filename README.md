@@ -19,6 +19,12 @@ List installed consumers
 Add a new consumer
 
     /lti add alias key secret launch_url description
+
+### Example
+
+To add tsugi-java-servlet (https://github.com/tsugiproject/tsugi-java-servlet) simply type
+
+    /lti add tsugi-java 12345 secret http://localhost:8080/tsugi-servlet/hello Tsugi Java Servlet
     
 ## Launch
 
@@ -26,6 +32,11 @@ Launches a consumer
 
     /lti launch alias
     
+### Example
+
+To launch tsugi-java-servlet (https://github.com/tsugiproject/tsugi-java-servlet) added as before
+
+    /lti launch tsugi-java
     
 # Install
  
