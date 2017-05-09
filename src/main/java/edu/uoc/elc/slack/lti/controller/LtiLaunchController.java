@@ -131,7 +131,6 @@ public class LtiLaunchController {
 		} catch (IOException e) {
 		}
 
-		//model.addAttribute("launchObj", ltiConsumerPropertiesFactory.newConsumerLaunch(reqParams));
 		model.addAttribute("action", channelConsumer.getLaunchUrl());
 		model.addAttribute("launch", reqParams);
 		return "launch";

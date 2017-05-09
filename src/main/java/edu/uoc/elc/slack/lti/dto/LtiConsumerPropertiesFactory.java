@@ -25,10 +25,12 @@ package edu.uoc.elc.slack.lti.dto;
 
 import allbegray.slack.type.Authentication;
 import edu.uoc.elc.slack.lti.entity.ChannelConsumer;
-import edu.uoc.elc.slack.lti.form.ConsumerLaunch;
 import org.oscelot.lti.tp.ToolConsumer;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
@@ -62,28 +64,5 @@ public class LtiConsumerPropertiesFactory {
 
 		httpParams.addAll(propertiesMap.entrySet());
 		return httpParams;
-	}
-
-	public ConsumerLaunch newConsumerLaunch(ChannelConsumer channelConsumer, ToolConsumer tc, String userName, String userId, String channelName, String slackApp, String slackName) {
-
-
-		return ConsumerLaunch.builder()
-						.lis_person_name_full(userName)
-						.lis_person_name_family(userName)
-						.lis_person_name_given(userName)
-						.lis_person_sourceid(channelConsumer.getChannelId() + ":" + userId)
-						.user_id(userId)
-						.roles("Learner") // TODO: check
-						.resource_link_id(channelConsumer.getChannelId() + ":" + channelConsumer.getAlias())
-						.resource_link_title(channelConsumer.getAlias())
-						.resource_link_description(channelConsumer.getDescription())
-						.context_id(channelConsumer.getChannelId())
-						.context_label(channelName)
-						.context_title(channelName)
-						.tool_consumer_info_product_family_code("slack-lti")
-						.tool_consumer_info_version("0.0.1")
-						.tool_consumer_instance_guid(slackApp)
-						.tool_consumer_instance_description(slackName)
-						.build();
 	}
 }
