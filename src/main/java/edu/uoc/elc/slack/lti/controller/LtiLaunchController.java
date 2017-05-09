@@ -111,6 +111,7 @@ public class LtiLaunchController {
 		// get from Slack
 		final SlackWebApiClient slackWebApiClient = SlackClientFactory.createWebApiClient(oauth2Context.getAccessToken().getValue());
 		final allbegray.slack.type.Authentication slackAuth = slackWebApiClient.auth();
+		final User userInfo = slackWebApiClient.getUserInfo(slackAuth.getUser_id());
 
 		// check we can do the launch
 		checkCanLaunch(tc, slackAuth, slackWebApiClient, channelConsumer, teamId, channelId);
@@ -120,7 +121,7 @@ public class LtiLaunchController {
 
 		List<Map.Entry<String, String>> reqParams = new ArrayList<Map.Entry<String, String>>();
 		OAuthMessage oAuthMessage = new OAuthMessage("POST", channelConsumer.getLaunchUrl(),
-						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, slackAuth));
+						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, slackAuth, userInfo));
 		OAuthConsumer oAuthConsumer = new OAuthConsumer("about:blank", channelConsumer.getConsumerKey(), tc.getSecret(), null);
 		OAuthAccessor oAuthAccessor = new OAuthAccessor(oAuthConsumer);
 		try {
