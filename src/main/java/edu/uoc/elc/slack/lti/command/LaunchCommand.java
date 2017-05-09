@@ -29,23 +29,20 @@ import edu.uoc.elc.slack.lti.entity.ChannelConsumerId;
 import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
 import edu.uoc.elc.slack.lti.type.*;
 import lombok.Setter;
-import org.oscelot.lti.tp.DataConnector;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
  */
 @Setter
-public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, DataConnectorAware, ServerURLAware {
+public class LaunchCommand implements Command, ChannelConsumerRepositoryAware, ServerURLAware {
 	private final static String ERROR_MSG = "Sorry, that didn't work. Rember the usage:\n"
 					+ "/lti launch alias";
 	private final static String DOESNT_EXISTS_ERROR_MSG = "Sorry, consumer with alias `%s` does not exist. Try another one.";
 	private final static String SUCCESS_MSG = "<@%s|%s> launched lti consumer `%s`.";
 
 	private ChannelConsumerRepository channelConsumerRepository;
-	private DataConnector dataConnector;
 	private String serverUrl;
 
 	@Override
