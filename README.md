@@ -81,6 +81,8 @@ Set database properties in `src/main/resources/application-{active_profile}.yml`
 
 ## Slack Oauth
 
+We use [Slack Web API](https://api.slack.com/web) for getting user's info (that is because the launch url is user agnostic).
+
 Set client properties in `src/main/resources/application-{active_profile}.yml`:
 
     security:
