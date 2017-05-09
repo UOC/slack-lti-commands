@@ -69,7 +69,7 @@ public class AddCommand implements Command, ChannelConsumerRepositoryAware, Data
 		final ChannelConsumer saved = channelConsumerRepository.save(channelConsumer);
 		if (saved != null) {
 			// add the consumer
-			ToolConsumer tc = new ToolConsumer(saved.getToolConsumerKey(), dataConnector, true);
+			ToolConsumer tc = new ToolConsumer(saved.getConsumerKey(), dataConnector, true);
 			tc.setName(addCommandRequest.getAlias());
 			tc.setSecret(addCommandRequest.getConsumerSecret());
 
@@ -83,8 +83,6 @@ public class AddCommand implements Command, ChannelConsumerRepositoryAware, Data
 						.text(String.format(SUCCESS_MSG, saved.getAlias()))
 						.build();
 	}
-
-
 
 
 	private CommandResponse error(String message) {

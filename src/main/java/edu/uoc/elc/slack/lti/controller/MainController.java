@@ -23,17 +23,16 @@
 
 package edu.uoc.elc.slack.lti.controller;
 
-import edu.uoc.elc.slack.lti.command.ChannelConsumerRepositoryAware;
-import edu.uoc.elc.slack.lti.command.Command;
-import edu.uoc.elc.slack.lti.command.DataConnectorAware;
-import edu.uoc.elc.slack.lti.command.ServerURLAware;
+import edu.uoc.elc.slack.lti.command.*;
 import edu.uoc.elc.slack.lti.repository.ChannelConsumerRepository;
+import edu.uoc.elc.slack.lti.repository.LtiConsumerRepository;
 import edu.uoc.elc.slack.lti.type.CommandEnum;
 import edu.uoc.elc.slack.lti.type.CommandRequest;
 import edu.uoc.elc.slack.lti.type.CommandResponse;
 import org.oscelot.lti.tp.DataConnector;
 import org.oscelot.lti.tp.dataconnector.JDBC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,10 +54,17 @@ public class MainController {
 	@Autowired
 	private DataSource dataSource;
 
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
+
 	@RequestMapping(method = RequestMethod.POST)
 	public CommandResponse ltiCommand(CommandRequest request, HttpServletRequest httpServletRequest) throws Throwable{
 		CommandEnum commandEnum = CommandEnum.fromRequest(request);
 		final Command command = commandEnum.getCommand();
+
+		// check if table exists
+		LtiConsumerRepository ltiConsumerRepository = new LtiConsumerRepository(dataSource, jdbcTemplate);
+		ltiConsumerRepository.createConsumerTableForChannel(request.getChannel_id());
 
 		// inject beans
 		if (command instanceof ChannelConsumerRepositoryAware) {
@@ -66,7 +72,7 @@ public class MainController {
 		}
 
 		if (command instanceof DataConnectorAware) {
-			DataConnector dataConnector = new JDBC("", dataSource.getConnection());
+			DataConnector dataConnector = new JDBC(getDataConnectorPrefix(request), dataSource.getConnection());
 			((DataConnectorAware) command).setDataConnector(dataConnector);
 		}
 
@@ -75,5 +81,9 @@ public class MainController {
 			((ServerURLAware) command).setServerUrl(url.getProtocol() + "://" + url.getHost());
 		}
 		return command.execute(request);
+	}
+
+	private String getDataConnectorPrefix(CommandRequest request) {
+		return request.getChannel_id() + "_";
 	}
 }

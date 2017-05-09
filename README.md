@@ -48,9 +48,6 @@ To launch tsugi-java-servlet (https://github.com/tsugiproject/tsugi-java-servlet
         GRANT ALL ON slackLti.* TO 'slackLti'@'localhost' IDENTIFIED BY 'slackLti';
         GRANT ALL ON slackLti.* TO 'slackLti'@'127.0.0.1' IDENTIFIED BY 'slackLti';
     
-2. Execute LTI SQL script
-    
-    See http://www.spvsoftwareproducts.com/java/lti_tool_provider/ for the SQL script
     
 ## LTI library
 

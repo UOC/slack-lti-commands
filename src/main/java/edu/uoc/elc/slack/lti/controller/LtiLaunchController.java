@@ -25,7 +25,6 @@ package edu.uoc.elc.slack.lti.controller;
 
 import allbegray.slack.SlackClientFactory;
 import allbegray.slack.type.Channel;
-import allbegray.slack.type.Group;
 import allbegray.slack.type.User;
 import allbegray.slack.webapi.SlackWebApiClient;
 import edu.uoc.elc.slack.lti.controller.exception.ChannelConsumerNotAvailableException;
@@ -44,8 +43,6 @@ import org.oscelot.lti.tp.DataConnector;
 import org.oscelot.lti.tp.ToolConsumer;
 import org.oscelot.lti.tp.dataconnector.JDBC;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.OAuth2ClientContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -105,8 +102,8 @@ public class LtiLaunchController {
 			throw new ChannelConsumerNotFoundException();
 		}
 
-		DataConnector dataConnector = new JDBC("", dataSource.getConnection());
-		ToolConsumer tc = new ToolConsumer(channelConsumer.getToolConsumerKey(), dataConnector, false);
+		DataConnector dataConnector = new JDBC(channelId + "_", dataSource.getConnection());
+		ToolConsumer tc = new ToolConsumer(channelConsumer.getConsumerKey(), dataConnector, false);
 
 		// get from Slack
 		final SlackWebApiClient slackWebApiClient = SlackClientFactory.createWebApiClient(oauth2Context.getAccessToken().getValue());
