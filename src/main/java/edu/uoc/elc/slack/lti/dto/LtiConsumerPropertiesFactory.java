@@ -43,7 +43,7 @@ public class LtiConsumerPropertiesFactory {
 		return StringUtils.isEmpty(lhs) ? rhs : lhs;
 	}
 
-	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, ToolConsumer tc, Authentication slackAuth, User user) {
+	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, Authentication slackAuth, User user) {
 		HashSet<Map.Entry<String,String>> httpParams = new HashSet<Map.Entry<String,String>>();
 
 		Map<String, String> propertiesMap = new TreeMap<>();

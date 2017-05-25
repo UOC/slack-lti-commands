@@ -118,7 +118,7 @@ public class LtiLaunchController {
 
 		List<Map.Entry<String, String>> reqParams = new ArrayList<Map.Entry<String, String>>();
 		OAuthMessage oAuthMessage = new OAuthMessage("POST", channelConsumer.getLaunchUrl(),
-						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, tc, slackAuth, userInfo));
+						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, slackAuth, userInfo));
 		OAuthConsumer oAuthConsumer = new OAuthConsumer("about:blank", channelConsumer.getConsumerKey(), tc.getSecret(), null);
 		OAuthAccessor oAuthAccessor = new OAuthAccessor(oAuthConsumer);
 		try {
