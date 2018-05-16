@@ -27,6 +27,7 @@ import edu.uoc.elc.slack.lti.type.AddCommandRequest;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -40,9 +41,11 @@ import javax.persistence.IdClass;
 @IdClass(ChannelConsumerId.class)
 public class ChannelConsumer {
 	@Id
+	@Column(length = 125)
 	private String channelId;
 
 	@Id
+	@Column(length = 125)
 	private String alias;
 
 	private String description;
