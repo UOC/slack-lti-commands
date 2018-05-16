@@ -29,7 +29,7 @@
 	<groupId>edu.uoc.elc.slack.lti</groupId>
 	<artifactId>slack-lti-command</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>slack-lti-command</name>
 	<description>Slack commands for managing LTI provided apps</description>
@@ -51,6 +51,15 @@
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
+		</repository>
+		<repository>
+			<id>ossrh</id>
+			<name>Sonatype</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 
