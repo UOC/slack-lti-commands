@@ -24,6 +24,7 @@
 package edu.uoc.elc.slack.lti.controller;
 
 import allbegray.slack.SlackClientFactory;
+import allbegray.slack.exception.SlackResponseErrorException;
 import allbegray.slack.type.Channel;
 import allbegray.slack.type.User;
 import allbegray.slack.webapi.SlackWebApiClient;
@@ -87,9 +88,18 @@ public class LtiLaunchController {
 			throw new InvalidLaunchException();
 		}
 		// check user has access to the channel
-		final List<Channel> channelList = slackWebApiClient.getChannelList();
-		Predicate<Channel> isChannelPredicate = e -> e.getId().equals(channelConsumer.getChannelId());
-		if (channelList.stream().noneMatch(isChannelPredicate)) {
+		boolean channel_exist = false;
+		try {
+			channel_exist = slackWebApiClient.getChannelInfo(channelConsumer.getChannelId())!=null;
+		} catch (SlackResponseErrorException sre) {
+			//then try if is a private channel
+			try {
+				channel_exist = slackWebApiClient.getGroupInfo(channelConsumer.getChannelId())!=null;
+			} catch (SlackResponseErrorException Gre) {
+				//then this group / channel doesn't exist!
+			}
+		}
+		if (!channel_exist) {
 			throw new InvalidLaunchException();
 		}
 	}
@@ -102,7 +112,7 @@ public class LtiLaunchController {
 			throw new ChannelConsumerNotFoundException();
 		}
 
-		DataConnector dataConnector = new JDBC(channelId + "_", dataSource.getConnection());
+		DataConnector dataConnector = new JDBC(channelId.toLowerCase() + "_", dataSource.getConnection());
 		ToolConsumer tc = new ToolConsumer(channelConsumer.getConsumerKey(), dataConnector, false);
 
 		// get from Slack
@@ -110,27 +120,34 @@ public class LtiLaunchController {
 		final allbegray.slack.type.Authentication slackAuth = slackWebApiClient.auth();
 		final User userInfo = slackWebApiClient.getUserInfo(slackAuth.getUser_id());
 
-		// check we can do the launch
-		checkCanLaunch(tc, slackAuth, slackWebApiClient, channelConsumer, teamId, channelId);
-
-		// prepare launch
-		LtiConsumerPropertiesFactory ltiConsumerPropertiesFactory = new LtiConsumerPropertiesFactory();
-
-		List<Map.Entry<String, String>> reqParams = new ArrayList<Map.Entry<String, String>>();
-		OAuthMessage oAuthMessage = new OAuthMessage("POST", channelConsumer.getLaunchUrl(),
-						ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, slackAuth, userInfo));
-		OAuthConsumer oAuthConsumer = new OAuthConsumer("about:blank", channelConsumer.getConsumerKey(), tc.getSecret(), null);
-		OAuthAccessor oAuthAccessor = new OAuthAccessor(oAuthConsumer);
 		try {
-			oAuthMessage.addRequiredParameters(oAuthAccessor);
-			reqParams.addAll(oAuthMessage.getParameters());
-		} catch (OAuthException e) {
-		} catch (URISyntaxException e) {
-		} catch (IOException e) {
-		}
+			// check we can do the launch
+			checkCanLaunch(tc, slackAuth, slackWebApiClient, channelConsumer, teamId, channelId);
 
-		model.addAttribute("action", channelConsumer.getLaunchUrl());
-		model.addAttribute("launch", reqParams);
-		return "launch";
+			// prepare launch
+			LtiConsumerPropertiesFactory ltiConsumerPropertiesFactory = new LtiConsumerPropertiesFactory();
+
+			List<Map.Entry<String, String>> reqParams = new ArrayList<Map.Entry<String, String>>();
+			OAuthMessage oAuthMessage = new OAuthMessage("POST", channelConsumer.getLaunchUrl(),
+					ltiConsumerPropertiesFactory.paramsForLaunch(channelConsumer, slackAuth, userInfo));
+			OAuthConsumer oAuthConsumer = new OAuthConsumer("about:blank", channelConsumer.getConsumerKey(), tc.getSecret(), null);
+			OAuthAccessor oAuthAccessor = new OAuthAccessor(oAuthConsumer);
+			try {
+				oAuthMessage.addRequiredParameters(oAuthAccessor);
+				reqParams.addAll(oAuthMessage.getParameters());
+			} catch (OAuthException e) {
+			} catch (URISyntaxException e) {
+			} catch (IOException e) {
+			}
+
+			model.addAttribute("action", channelConsumer.getLaunchUrl());
+			model.addAttribute("launch", reqParams);
+			return "launch";
+		} catch (Exception e){
+			System.err.println("Getting exception Exception "+e.getMessage());
+			e.printStackTrace();;
+			return "error";
+
+		}
 	}
 }
