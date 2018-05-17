@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.net.URL;
@@ -56,6 +57,10 @@ public class MainController {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+
+	@Autowired
+	private ServletContext servletContext;
+
 
 	@RequestMapping(method = RequestMethod.POST)
 	public CommandResponse ltiCommand(CommandRequest request, HttpServletRequest httpServletRequest) throws Throwable{
@@ -78,12 +83,13 @@ public class MainController {
 
 		if (command instanceof ServerURLAware) {
 			URL url = new URL(httpServletRequest.getRequestURL().toString());
-			((ServerURLAware) command).setServerUrl(url.getProtocol() + "://" + url.getHost());
+
+			((ServerURLAware) command).setServerUrl(url.getProtocol() + "://" + url.getHost()+servletContext.getContextPath());
 		}
 		return command.execute(request);
 	}
 
 	private String getDataConnectorPrefix(CommandRequest request) {
-		return request.getChannel_id() + "_";
+		return request.getChannel_id().toLowerCase() + "_";
 	}
 }

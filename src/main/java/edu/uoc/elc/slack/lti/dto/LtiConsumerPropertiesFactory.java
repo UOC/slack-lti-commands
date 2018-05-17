@@ -65,6 +65,16 @@ public class LtiConsumerPropertiesFactory {
 		propertiesMap.put("tool_consumer_instance_guid", channelConsumer.getTeamId() + ".slack.com");
 		propertiesMap.put("tool_consumer_instance_description", channelConsumer.getTeamDomain());
 
+		if (channelConsumer.getCustomParameters()!=null) {
+			String[] params = channelConsumer.getCustomParameters().split(" ");
+			for(String custom: params) {
+				String [] customParam = custom.split("=");
+				if (customParam.length==2) {
+					propertiesMap.put("custom_" + customParam[0], customParam[1]);
+				}
+			}
+		}
+
 		propertiesMap.put("lti_version", "LTI-2p0");
 		propertiesMap.put("lti_message_type", "basic-lti-launch-request");
 

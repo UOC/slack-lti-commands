@@ -41,7 +41,7 @@ import org.oscelot.lti.tp.ToolConsumer;
 @Setter
 public class AddCommand implements Command, ChannelConsumerRepositoryAware, DataConnectorAware {
 
-	private final static String ERROR_MSG = "Sorry, that didn't work. Rember the usage:\n"
+	private final static String ERROR_MSG = "Sorry, that didn't work. Remember the usage:\n"
 					+ "/lti add alias key secret launch_url description";
 	private final static String EXISTS_ERROR_MSG = "Sorry, consumer with alias `%s` already exists. Try another one.";
 	private final static String SUCCESS_MSG = "consumer with alias `%s` added.";

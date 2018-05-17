@@ -25,7 +25,6 @@ package edu.uoc.elc.slack.lti.controller;
 
 import allbegray.slack.SlackClientFactory;
 import allbegray.slack.exception.SlackResponseErrorException;
-import allbegray.slack.type.Channel;
 import allbegray.slack.type.User;
 import allbegray.slack.webapi.SlackWebApiClient;
 import edu.uoc.elc.slack.lti.controller.exception.ChannelConsumerNotAvailableException;

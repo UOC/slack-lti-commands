@@ -25,6 +25,7 @@ package edu.uoc.elc.slack.lti.dto;
 
 import edu.uoc.elc.slack.lti.entity.ChannelConsumer;
 import edu.uoc.elc.slack.lti.type.AddCommandRequest;
+import edu.uoc.elc.slack.lti.type.SetCustomParametersCommandRequest;
 
 /**
  * @author Xavi Aracil <xaracil@uoc.edu>
@@ -44,6 +45,19 @@ public class ChannelConsumerFactory {
 		channelConsumer.setTeamId(addCommandRequest.getRequest().getTeam_id());
 		channelConsumer.setTeamDomain(addCommandRequest.getRequest().getTeam_domain());
 		channelConsumer.setChannelName(addCommandRequest.getRequest().getChannel_name());
+
+		return channelConsumer;
+	}
+
+	public ChannelConsumer newChannelConsumer(SetCustomParametersCommandRequest setCustomParametersCommandRequest) {
+		if (!setCustomParametersCommandRequest.isValid()) {
+			return null;
+		}
+
+		ChannelConsumer channelConsumer = new ChannelConsumer();
+		channelConsumer.setAlias(setCustomParametersCommandRequest.getAlias());
+		channelConsumer.setChannelId(setCustomParametersCommandRequest.getRequest().getChannel_id());
+		channelConsumer.setCustomParameters(setCustomParametersCommandRequest.getCustomParameterWithError());
 
 		return channelConsumer;
 	}

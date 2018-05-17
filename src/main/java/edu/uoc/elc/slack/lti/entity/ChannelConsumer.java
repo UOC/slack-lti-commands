@@ -54,6 +54,8 @@ public class ChannelConsumer {
 	private String teamId;
 	private String teamDomain;
 	private String channelName;
+	@Column(length = 500)
+	private String customParameters;
 
 	public String getCaption() {
 		return alias + ": " + description;

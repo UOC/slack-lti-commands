@@ -34,6 +34,7 @@ public class HelpCommand implements Command {
 	private static String USAGE = "LTI commands. Usage:\n"
 					+ "/lti list. List all consumers\n"
 					+ "/lti add alias key secret launch_url description. Adds a consumer\n"
+					+ "/lti custom_params alias custom_param1=value1 custom_param2=value2. Set a custom paramters, to delete leave it empty\n"
 					+ "/lti launch alias. Launches a consumer\n"
 					+ "/lti help. Gets this message";
 
