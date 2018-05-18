@@ -43,7 +43,7 @@ public class LtiConsumerPropertiesFactory {
 		return StringUtils.isEmpty(lhs) ? rhs : lhs;
 	}
 
-	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, Authentication slackAuth, User user) {
+	public Set<Map.Entry<String,String>> paramsForLaunch(ChannelConsumer channelConsumer, Authentication slackAuth, User user, boolean current_user_is_creator) {
 		HashSet<Map.Entry<String,String>> httpParams = new HashSet<Map.Entry<String,String>>();
 
 		Map<String, String> propertiesMap = new TreeMap<>();
@@ -53,7 +53,7 @@ public class LtiConsumerPropertiesFactory {
 		propertiesMap.put("lis_person_name_given", or(user.getProfile().getFirst_name(), slackAuth.getUser()));
 		propertiesMap.put("lis_person_sourceid", channelConsumer.getChannelId() + ":" + slackAuth.getUser_id());
 		propertiesMap.put("user_id", slackAuth.getUser_id());
-		propertiesMap.put("roles", "Learner"); // TODO: check
+		propertiesMap.put("roles", current_user_is_creator?"Administrator":"Learner"); // TODO: add operation to create teachers
 		propertiesMap.put("resource_link_id", channelConsumer.getChannelId() + ":" + channelConsumer.getAlias());
 		propertiesMap.put("resource_link_title", channelConsumer.getAlias());
 		propertiesMap.put("resource_link_description", channelConsumer.getDescription());
