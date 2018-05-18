@@ -75,7 +75,7 @@ public class LtiConsumerPropertiesFactory {
 			}
 		}
 
-		propertiesMap.put("lti_version", "LTI-2p0");
+		propertiesMap.put("lti_version", "LTI-1p0");
 		propertiesMap.put("lti_message_type", "basic-lti-launch-request");
 
 		httpParams.addAll(propertiesMap.entrySet());
